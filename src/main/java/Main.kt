@@ -10,6 +10,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import testStructure.ComponentTest
 import testStructure.StructureComponent
+import testStructure.StructureE2E
 import testStructure.TestsStorage
 
 var source:SourceInJson? = null
@@ -30,7 +31,9 @@ fun getPinsInMap(){
         override fun onResponse(call: Call<SourceInJson>, response: Response<SourceInJson>) {
             if (response.isSuccessful) {
                 source = response.body()
-                println(source!!.objects[3])
+                println(source!!.pDescription)
+                createE2eAndComponentTests(source!!)
+
             } else {
                 println("****")
             }
@@ -42,42 +45,69 @@ fun getPinsInMap(){
     })
 
 }
+val testsStorage = TestsStorage("", "")
+
 fun createE2eAndComponentTests(source:SourceInJson){
-    val testsStorage = TestsStorage("", "",ArrayList(),ArrayList(),ArrayList())
+
 
     var i = 0
-    while(i < source.objects.size){
+    while( i < source.objects.size){
         when(source.objects[i].color) {
 
             "blue" -> {
                 if (source.objects[i].name.contains("preconditionGeneral")){
-                    if  (testsStorage.preconditionGeneral == "")
+                    if  (testsStorage.preconditionGeneral == "") {
                         testsStorage.preconditionGeneral = source.objects[i].label
-                    else
+
+                    }
+                    else {
                         testsStorage.preconditionGeneral = testsStorage.preconditionGeneral + "\n" + source.objects[i].label
 
+                    }
                 } else if (source.objects[i].name.contains("step")){
                     testsStorage.steps.add(source.objects[i].label)
+
                 } else if (source.objects[i].name.contains("precondition")) {
 
-                    if  (testsStorage.precondition == "")
+                    if  (testsStorage.precondition == "") {
                         testsStorage.precondition = source.objects[i].label
-                    else
+
+                    }
+                    else {
                         testsStorage.precondition = testsStorage.precondition + "\n" + source.objects[i].label
+
+                    }
                 }
 
             }
             "red" -> {
+                if  (testsStorage.preconditionGeneral == ""){
+                    println("У вас невалидная схема!! Введите precondition!")
+                } else {
+                    testsStorage.assert.add(source.objects[i].label)
+
+                    val structureE2E: StructureE2E = StructureE2E(testsStorage.preconditionGeneral +  "\n" + testsStorage.precondition,source.pDescription,
+                            testsStorage.steps,testsStorage.assert)
+                    testsStorage.testsE2E.add(structureE2E)
+
+
+                    testsStorage.precondition = ""
+                    testsStorage.assert.clear()
+                    testsStorage.steps.clear()
+
+                }
 
             }
 
-            "green" -> {
+            "darkgreen" -> {
+                testsStorage.assert.add(source.objects[i].label)
+
                 val componentTest: ArrayList<ComponentTest> = ArrayList()
                 source.edges.forEach {
                     edges ->
-                    if (edges.head == source.objects[i]._gvid){
+                    if (edges.tail== source.objects[i]._gvid){
                        source.objects.forEach {
-                           if (it._gvid == edges.tail && it.color == "orange"){
+                           if (it._gvid == edges.head && it.color == "orange"){
                                componentTest.add(ComponentTest(it.label))
                              }
                         }
@@ -95,5 +125,4 @@ fun createE2eAndComponentTests(source:SourceInJson){
 
 fun main(args: Array<String>) {
     getPinsInMap()
-
 }
