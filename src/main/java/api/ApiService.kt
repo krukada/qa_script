@@ -5,6 +5,6 @@ import retrofit2.http.GET
 
 
 interface ApiService {
-    @GET("avito-tech/android-trainee-task/master/pins.json")
+    @GET("krukada/qa_script/master/src/main/resources/text.json")
     fun getPinsInMap(): Call<SourceInJson>
 }

@@ -1,6 +1,8 @@
 package api
 
 data class Vertex(
-        val color: String,
-        val label: String
+        var color: String,
+        var label: String,
+        var  name: String,
+        val _gvid: Int
 )

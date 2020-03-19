@@ -3,6 +3,7 @@ package api
 import java.util.*
 
 data class SourceInJson(
-         val pDescription: String,
-         val objects: ArrayList<Vertex>
+         val description: String,
+         val objects: ArrayList<Vertex>,
+         val edges: ArrayList<Edges>
  )

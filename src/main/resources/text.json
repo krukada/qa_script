@@ -31,7 +31,7 @@
   "objects": [
     {
       "_gvid": 0,
-      "name": "step1",
+      "name": "preconditionGeneral1",
       "_draw_":
       [
         {
@@ -326,7 +326,7 @@
     },
     {
       "_gvid": 5,
-      "name": "step2",
+      "name": "precondition2",
       "_draw_":
       [
         {
@@ -747,7 +747,7 @@
     },
     {
       "_gvid": 13,
-      "name": "step4",
+      "name": "precondition4",
       "_draw_":
       [
         {
@@ -789,7 +789,7 @@
     },
     {
       "_gvid": 14,
-      "name": "step5",
+      "name": "precondition5",
       "_draw_":
       [
         {
